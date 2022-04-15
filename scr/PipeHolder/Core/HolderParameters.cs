@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Core
@@ -56,21 +55,20 @@ namespace Core
             ParametersList.Add(new Parameter(ParametersType.PipeDiameter, 10, 27.5, 15));
             ParametersList.Add(new Parameter(ParametersType.HolderDiameter, 60, 90, 60));
             ParametersList.Add(new Parameter(ParametersType.HoleDiameter, 4, 7.5, 6));
-
-            this[ParametersType.ExternalDiameter].ValueChanged += OnExternalDiameterChanged;
-            this[ParametersType.HolderDiameter].ValueChanged += OnHolderDiameterChanged;
         }
 
         /// <summary>
-        /// Обработчик события изменения значения внешнего диаметра.
-        /// Для зависимых параметров устанавливаются новые ограничения
+        /// Метод для изменения ограничений у зависимых параметров
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnExternalDiameterChanged(object sender, EventArgs e)
+        public void CheckDependencyValue()
         {
-            var currentExternalDiameter = this[ParametersType.ExternalDiameter].Value;
             var currentHolderDiameter = this[ParametersType.HolderDiameter].Value;
+
+            var externalDiameter = this[ParametersType.ExternalDiameter];
+            this[ParametersType.ExternalDiameter] = new Parameter(externalDiameter.Name,
+                externalDiameter.Min, currentHolderDiameter / 2, externalDiameter.Value);
+
+            var currentExternalDiameter = this[ParametersType.ExternalDiameter].Value;
 
             var pipeDiameter = this[ParametersType.PipeDiameter];
             this[ParametersType.PipeDiameter] = new Parameter(pipeDiameter.Name,
@@ -80,24 +78,6 @@ namespace Core
             this[ParametersType.HoleDiameter] = new Parameter(holeDiameter.Name,
                 holeDiameter.Min, (currentHolderDiameter - currentExternalDiameter) / 4,
                 holeDiameter.Value);
-        }
-
-        /// <summary>
-        /// Обработчик события изменения значения диаметра держателя.
-        /// Для зависимых параметров устанавливаются новые ограничения
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnHolderDiameterChanged(object sender, EventArgs e)
-        {
-            var currentHolderDiameter = this[ParametersType.HolderDiameter].Value;
-
-            var externalDiameter = this[ParametersType.ExternalDiameter];
-            this[ParametersType.ExternalDiameter] = new Parameter(externalDiameter.Name,
-                externalDiameter.Min, currentHolderDiameter - 30, externalDiameter.Value);
-            this[ParametersType.ExternalDiameter].ValueChanged += OnExternalDiameterChanged;
-
-            OnExternalDiameterChanged(sender, e);
         }
     }
 }

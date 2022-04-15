@@ -78,16 +78,21 @@ namespace TestCore
         }
 
         [TestCase(10, TestName = "При попытке сохранить значение, которое меньше минимального," +
-                                 " должно выбраывать исключение")]
+                                 " должно измениться сообщение об ошибке")]
         [TestCase(40, TestName = "При попытке сохранить значение, которое больше максимального," +
-                                 " должно выбраывать исключение")]
-        public void TestValueSet_WrongValue_ThrowException(double expected)
+                                 " должно измениться сообщение об ошибке")]
+        public void TestValueSet_WrongValue_ChangeErrorDescription(double wrongValue)
         {
+            // Arrange
+            var expected = $"Значение должно быть от 20 мм до 30 мм";
+
             // Act
             var parameter = _testParameter.Clone() as Parameter;
+            parameter.Value = wrongValue;
+            var actual = parameter.ErrorDescription;
 
             // Assert
-            Assert.Throws<ArgumentException>(() => parameter.Value = expected);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestCase(TestName = "Позитивный тест геттера и сеттера IsValidData")]

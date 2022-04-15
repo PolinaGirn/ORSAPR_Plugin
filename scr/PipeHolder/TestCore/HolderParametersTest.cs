@@ -15,7 +15,7 @@ namespace TestCore
             {
                 new Parameter(ParametersType.Height, 15, 40, 25),
                 new Parameter(ParametersType.ExternalDiameter, 20, 30, 30),
-                new Parameter(ParametersType.PipeDiameter, 10, 27.5, 20),
+                new Parameter(ParametersType.PipeDiameter, 10, 27.5, 15),
                 new Parameter(ParametersType.HolderDiameter, 60, 90, 60),
                 new Parameter(ParametersType.HoleDiameter, 4, 7.5, 6)
             };
@@ -129,7 +129,7 @@ namespace TestCore
             ParametersType.HoleDiameter, 4, 12.5, 80,
             TestName = TestOnDependentParameterChanged_ChangeLimits_TestName)]
         [TestCase(ParametersType.HolderDiameter,
-            ParametersType.ExternalDiameter, 20, 50, 80,
+            ParametersType.ExternalDiameter, 20, 40, 80,
             TestName = TestOnDependentParameterChanged_ChangeLimits_TestName)]
         [TestCase(ParametersType.ExternalDiameter,
             ParametersType.HoleDiameter, 4, 8.75, 25,
@@ -137,7 +137,7 @@ namespace TestCore
         [TestCase(ParametersType.ExternalDiameter,
             ParametersType.PipeDiameter, 10, 22.5, 25,
             TestName = TestOnDependentParameterChanged_ChangeLimits_TestName)]
-        public void TestOnDependentParameterChanged_ChangeLimits(ParametersType testParameter,
+        public void TestCheckDependencyValue_ChangeLimits(ParametersType testParameter,
             ParametersType name, double expectedMin, double expectedMax, double value)
         {
             // Act
@@ -149,6 +149,7 @@ namespace TestCore
                 }
             };
 
+            parametersList.CheckDependencyValue();
             var changedParameter = parametersList[name];
             var actualMin = changedParameter.Min;
             var actualMax = changedParameter.Max;

@@ -39,13 +39,16 @@ namespace Core
                 if (value < Min || value > Max)
                 {
                     IsValidData = false;
-                    throw new ArgumentException(
-                        $"Значение должно быть от {Min} мм до {Max} мм");
+                    ErrorDescription =
+                        $"Значение должно быть от {Min} мм до {Max} мм";
+                }
+                else
+                {
+                    IsValidData = true;
+                    ErrorDescription = "";
                 }
 
                 _value = value;
-                IsValidData = true;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -60,9 +63,9 @@ namespace Core
         public string Limits => $"({Min}-{Max} мм)";
 
         /// <summary>
-        /// Событие изменения текущего значения параметра
+        /// Описание ошибки
         /// </summary>
-        public event EventHandler ValueChanged;
+        public string ErrorDescription { get; private set; }
 
         /// <summary>
         /// Создает экземпляр класса <see cref="Parameter"/>

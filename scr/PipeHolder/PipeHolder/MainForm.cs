@@ -126,16 +126,9 @@ namespace PipeHolder
 
             if (double.TryParse(textBox.Text, out var newValue))
             {
-                try
-                {
-                    parameter.Value = newValue;
-                    UpdateTextBoxes();
-                }
-                catch (ArgumentException exception)
-                {
-                    toolTip.SetToolTip(textBox, exception.Message);
-                    textBox.BackColor = Color.LightCoral;
-                }
+                parameter.Value = newValue;
+                _parameters.CheckDependencyValue();
+                UpdateTextBoxes();
             }
             else
             {
@@ -159,14 +152,19 @@ namespace PipeHolder
                 var textBox = keyValuePair.Value;
                 var toolTip = _toolTipsDictionary[parameterName];
 
-                if (double.TryParse(textBox.Text, out var newValue)
-                    && parameter.IsValidData)
+                if (parameter.IsValidData)
                 {
                     toolTip.SetToolTip(textBox, null);
                     textBox.BackColor = Color.White;
-                    ShowCurrentLimits();
+                }
+                else
+                {
+                    toolTip.SetToolTip(textBox, parameter.ErrorDescription);
+                    textBox.BackColor = Color.LightCoral;
                 }
             }
+
+            ShowCurrentLimits();
         }
 
         /// <summary>
